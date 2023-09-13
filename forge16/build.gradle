@@ -77,6 +77,7 @@ dependencies {
     compileOnly 'org.apache.commons:commons-text:1.10.0'
     compileOnly 'me.lucko:commodore:2.2'
     shadow group: 'com.fatboyindustrial.gson-javatime-serialisers', name: 'gson-javatime-serialisers', version: '1.1.2'
+    shadow 'dev.dejvokep:boosted-yaml:1.3.1'
     shadow('space.arim.morepaperlib:morepaperlib:0.4.3')
     shadow fileTree(dir: 'C:/Libraries/Spigot16/', include: 'AndJam-1.0.3-840242c-indev.jar')
     shadow fileTree(dir: 'C:/Libraries/Spigot16/', include: 'AdvancementAPI-1.0-SNAPSHOT.jar')
