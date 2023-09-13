@@ -10,6 +10,7 @@ import me.gt86.pokesync.player.User;
 import net.minecraft.nbt.JsonToNBT;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -39,8 +40,7 @@ public class DataSnapshotOverview {
                 dataOwner.getUsername(), dataOwner.getUuid().toString())
             .ifPresent(user::sendMessage);
         locales.getLocale("data_manager_timestamp",
-//                        new SimpleDateFormat("MMM dd yyyy, HH:mm:ss.sss").format(snapshot.getTimestamp())) todo fix
-                snapshot.getTimestamp().toString())
+                new SimpleDateFormat(locales.getRawLocale("time_format").orElse("MMM dd yyyy, HH:mm:ss.sss")).format(snapshot.getTimestamp()))
             .ifPresent(user::sendMessage);
         if (snapshot.isPinned()) {
             locales.getLocale("data_manager_pinned").ifPresent(user::sendMessage);
@@ -48,30 +48,6 @@ public class DataSnapshotOverview {
         locales.getLocale("data_manager_cause", snapshot.getSaveCause().name().toLowerCase(Locale.ENGLISH).replaceAll("_", " "))
             .ifPresent(user::sendMessage);
 
-        // User status data, if present in the snapshot
-        final Optional<DataContainer.Stats> stats = snapshot.getStats();
-
-        PlayerStats playerStats = new PlayerStats();
-
-        try {
-
-            if (stats.isPresent()) {
-                playerStats.readFromNBT(JsonToNBT.parseTag(stats.get().getStatsData().data));
-                locales.getLocale("data_manager_status",
-                        Integer.toString(playerStats.getWins()),
-                        Integer.toString(playerStats.getLosses()),
-                        Integer.toString(playerStats.getTotalKills()))
-                    .ifPresent(user::sendMessage);
-            }
-        } catch (Exception e) {
-        }
-
-
-        if (user.hasPermission("pokesync.command.inventory.edit")
-            && user.hasPermission("pokesync.command.enderchest.edit")) {
-            locales.getLocale("data_manager_item_buttons", dataOwner.getUsername(), snapshot.getId().toString())
-                .ifPresent(user::sendMessage);
-        }
         locales.getLocale("data_manager_management_buttons", dataOwner.getUsername(), snapshot.getId().toString())
             .ifPresent(user::sendMessage);
         if (user.hasPermission("pokesync.command.userdata.dump")) {

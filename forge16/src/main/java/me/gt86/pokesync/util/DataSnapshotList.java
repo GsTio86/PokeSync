@@ -7,6 +7,7 @@ import me.gt86.pokesync.player.User;
 import net.william278.paginedown.PaginatedList;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,8 +28,7 @@ public class DataSnapshotList {
         this.paginatedList = PaginatedList.of(snapshots.stream()
                 .map(snapshot -> locales.getRawLocale("data_list_item",
                         getNumberIcon(snapshotNumber.getAndIncrement()),
-                                        /*new SimpleDateFormat("MMM dd yyyy, HH:mm:ss.sss")
-                                                .format(snapshot.getTimestamp())*/ snapshot.getTimestamp().toString(),
+                                        new SimpleDateFormat(locales.getRawLocale("time_format").orElse("MMM dd yyyy, HH:mm:ss.sss")).format(snapshot.getTimestamp()),
                         snapshot.getShortId(),
                         snapshot.getId().toString(),
                         snapshot.getSaveCause().getDisplayName(),
@@ -39,7 +39,7 @@ public class DataSnapshotList {
                 .setHeaderFormat(locales.getRawLocale("data_list_title", dataOwner.getUsername(),
                         "%first_item_on_page_index%", "%last_item_on_page_index%", "%total_items%")
                     .orElse(""))
-                .setCommand("/pokesync:userdata list " + dataOwner.getUsername())
+                .setCommand("/pokesync:pmuserdata list " + dataOwner.getUsername())
                 .build());
     }
 
