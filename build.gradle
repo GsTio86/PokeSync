@@ -1,0 +1,46 @@
+subprojects {
+    apply plugin: 'java'
+
+    group = 'me.gt86.pokesync'
+    version = '1.0'
+
+    ext {
+        forgeVersion = "none"
+    }
+
+    jar {
+        setArchiveBaseName("${rootProject.name}")
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url = "https://repo.lucko.me/" }
+        maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+        maven { url = "https://jitpack.io" }
+        maven { url = "https://repo.spongepowered.org/maven" }
+    }
+
+    task versionedRelease(type: Copy) {
+        delete fileTree('../release/') {
+            include '**/*.jar'
+        }
+        group "build"
+        from("./build/libs/${rootProject.name}-${version}.jar")
+        into('../release/')
+        include '*.jar'
+        rename { String filename ->
+            filename.replace("-${version}.jar", "-${project.version}-${forgeVersion}.jar")
+        }
+    }
+}
+
+
+tasks.withType(JavaCompile) { task ->
+    task.options.encoding = 'UTF-8'
+    task.options.fork = true
+}

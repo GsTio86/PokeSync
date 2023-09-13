@@ -1,0 +1,137 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+forgeVersion = "1.20.1"
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    ivy {
+        setUrl('https://download.nodecdn.net/containers/reforged/server/release')
+        metadataSources {
+            artifact()
+        }
+        patternLayout {
+            artifact('[revision]/[artifact].[ext]')
+        }
+    }
+    mavenCentral()
+    maven { url 'https://libraries.minecraft.net/' }
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        content {
+            includeGroup 'org.bukkit'
+            includeGroup 'org.spigotmc'
+        }
+    }
+    maven { url 'https://nexus.scarsz.me/content/groups/public/' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = 'https://repo.minebench.de' }
+    maven { url = 'https://mvn-repo.arim.space/lesser-gpl3/' }
+
+    maven { url 'https://repo.codemc.io/repository/maven-public/' }
+    maven { url 'https://repo.alessiodp.com/releases/' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://mvn-repo.arim.space/lesser-gpl3/' }
+    maven { url 'https://repo.william278.net/releases/' }
+}
+
+ext {
+    set 'version', version.toString()
+    set 'description', description.toString()
+
+    set 'jedis_version', jedis_version.toString()
+    set 'mysql_driver_version', mysql_driver_version.toString()
+    set 'mariadb_driver_version', mariadb_driver_version.toString()
+    set 'snappy_version', snappy_version.toString()
+    set 'commons_text_version', commons_text_version.toString()
+    set 'commons_pool2_version', commons_pool2_version.toString()
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:1.20.1-47.1.44"
+
+    compileOnly fileTree(dir: 'C:/Libraries/Forge/', include: 'Pixelmon-1.20.1-*.jar')
+    compileOnly fileTree(dir: 'C:/Libraries/Forge/', include: 'arclight-forge-1.20.1-1.0.1-SNAPSHOT.jar')
+    compileOnly fileTree(dir: 'C:/Libraries/Forge/', include: 'arclight-common.jar')
+
+    compileOnly 'org.xerial.snappy:snappy-java:1.1.9.1'
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
+    compileOnly 'net.kyori:adventure-text-serializer-legacy:4.13.1'
+    compileOnly 'de.themoep:minedown-adventure:1.7.1-SNAPSHOT'
+    compileOnly 'org.jetbrains:annotations:24.0.1'
+    compileOnly 'redis.clients:jedis:4.3.2'
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.google.code.gson:gson:2.10.1'
+    compileOnly 'commons-io:commons-io:2.13.0'
+    compileOnly 'org.apache.commons:commons-text:1.10.0'
+    compileOnly 'me.lucko:commodore:2.2'
+    shadow group: 'com.fatboyindustrial.gson-javatime-serialisers', name: 'gson-javatime-serialisers', version: '1.1.2'
+    shadow('space.arim.morepaperlib:morepaperlib:0.4.3')
+
+    shadow 'net.william278:andjam:1.0.2'
+    shadow 'net.william278:AdvancementAPI:97a9583413'
+    shadow 'net.william278:annotaml:2.0.4'
+    shadow 'net.william278:PagineDown:1.1'
+
+    shadow('com.zaxxer:HikariCP:5.0.1') {
+        exclude module: 'slf4j-api'
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    zip64 = true
+
+    setArchiveClassifier('')
+    setArchiveBaseName("${rootProject.name}")
+
+
+    dependencies {
+        exclude(dependency('com.mojang:brigadier'))
+    }
+
+    relocate 'org.apache.commons.io', 'me.gt86.pokesync.libraries.commons.io'
+    relocate 'org.apache.commons.text', 'me.gt86.pokesync.libraries.commons.text'
+    relocate 'org.apache.commons.lang3', 'me.gt86.pokesync.libraries.commons.lang3'
+    relocate 'com.google.gson', 'me.gt86.pokesync.libraries.gson'
+    relocate 'com.fatboyindustrial', 'me.gt86.pokesync.libraries.fatboyindustrial'
+    relocate 'de.themoep', 'me.gt86.pokesync.libraries'
+    relocate 'net.kyori', 'me.gt86.pokesync.libraries'
+    relocate 'org.jetbrains', 'me.gt86.pokesync.libraries'
+    relocate 'org.intellij', 'me.gt86.pokesync.libraries'
+    relocate 'com.zaxxer', 'me.gt86.pokesync.libraries'
+    relocate 'dev.dejvokep', 'me.gt86.pokesync.libraries'
+    relocate 'net.william278.desertwell', 'me.gt86.pokesync.libraries.desertwell'
+    relocate 'net.william278.paginedown', 'me.gt86.pokesync.libraries.paginedown'
+    relocate 'net.william278.mapdataapi', 'me.gt86.pokesync.libraries.mapdataapi'
+    relocate 'net.william278.andjam', 'me.gt86.pokesync.libraries.andjam'
+    relocate 'net.querz', 'me.gt86.pokesync.libraries.nbt'
+    relocate 'net.roxeez', 'me.gt86.pokesync.libraries'
+
+    relocate 'me.lucko.commodore', 'me.gt86.pokesync.libraries.commodore'
+    relocate 'net.byteflux.libby', 'me.gt86.pokesync.libraries.libby'
+    relocate 'org.bstats', 'me.gt86.pokesync.libraries.bstats'
+    relocate 'dev.triumphteam.gui', 'me.gt86.pokesync.libraries.triumphgui'
+    relocate 'net.william278.mpdbconverter', 'me.gt86.pokesync.libraries.mpdbconverter'
+    relocate 'net.william278.hslmigrator', 'me.gt86.pokesync.libraries.hslconverter'
+    relocate 'net.william278.annotaml', 'me.gt86.pokesync.libraries.annotaml'
+    relocate 'space.arim.morepaperlib', 'me.gt86.pokesync.libraries.paperlib'
+    relocate 'de.tr7zw', 'me.gt86.pokesync.libraries.itemnbtapi'
+
+}
+
+jar.finalizedBy('shadowJar')
+shadowJar.finalizedBy('reobfJar')
+build.finalizedBy('versionedRelease')

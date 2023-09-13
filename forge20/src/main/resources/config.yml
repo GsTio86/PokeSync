@@ -1,0 +1,54 @@
+language: en-gb
+cluster_id: ''
+debug_logging: false
+database:
+  # Type of database to use (MYSQL, SQLITE)
+  type: MYSQL
+  credentials:
+    # Database connection settings
+    host: "localhost"
+    port: 3306
+    database: BukkitPokeSync
+    username: "root"
+    password: "pa55w0rd"
+    parameters: ?autoReconnect=true&useSSL=false
+  connection_pool:
+    # MySQL connection pool properties
+    maximum_pool_size: 10
+    minimum_idle: 10
+    maximum_lifetime: 1800000
+    keepalive_time: 5
+    connection_timeout: 5000
+  table_names:
+    users: pokesync_users
+    user_data: pokesync_user_data
+redis:
+  credentials:
+    # Redis connection settings
+    host: localhost
+    port: 6379
+    password: ''
+  use_ssl: false
+synchronization:
+  max_user_data_snapshots: 5
+  save_on_world_save: true
+  compress_data: true
+  notification_display_slot: ACTION_BAR
+  network_latency_milliseconds: 500
+  features:
+    stats: true
+    party: true
+    pc: true
+    money: true
+    megaitem: true
+    charm: true
+    lure: true
+    server_cosmetics: true
+    pokedex: true
+    curry: true
+    trainer_card: true
+    daycare: true
+    quests: true
+  event_priorities:
+    join_listener: LOWEST
+    quit_listener: LOWEST
