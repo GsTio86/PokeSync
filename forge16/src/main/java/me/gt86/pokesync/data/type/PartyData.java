@@ -19,12 +19,12 @@ public class PartyData {
     public boolean tempMode;
 
     @SerializedName(TEMP_PARTY_COLOR)
-    public Color tempPartyColor;
+    public ColorData colorData;
 
     public PartyData(Map<Integer, String> party, boolean tempMode, Color tempPartyColor) {
         this.party = party;
         this.tempMode = tempMode;
-        this.tempPartyColor = tempPartyColor;
+        this.colorData = new ColorData(tempPartyColor);
     }
 
 }

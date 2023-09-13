@@ -141,7 +141,7 @@ public abstract class BukkitDataContainer implements DataContainer {
                 }
             }
             if (serverPlayer != null) {
-                NetworkHelper.sendPacket(new SetTempMode(partyData.tempMode, partyData.tempPartyColor), serverPlayer);
+                NetworkHelper.sendPacket(new SetTempMode(partyData.tempMode, partyData.colorData.toColor()), serverPlayer);
                 for (int i = 0; i < 6; i++)
                     storage.notifyListeners(new StoragePosition(-1, i), storage.get(i), EnumUpdateType.CLIENT);
             }
