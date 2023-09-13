@@ -11,12 +11,12 @@ public interface MutableDataStore {
     Map<DataContainer.Type, DataContainer> getData();
 
     @NotNull
-    default Optional<DataContainer.PMPlayerData> getPMPlayerData() {
-        return Optional.ofNullable((DataContainer.PMPlayerData) getData().get(DataContainer.Type.PLAYER_DATA));
+    default Optional<DataContainer.Gift> getGift() {
+        return Optional.ofNullable((DataContainer.Gift) getData().get(DataContainer.Type.GIFT_DATA));
     }
 
-    default void setPlayerData(@NotNull DataContainer.PMPlayerData playerData) {
-        getData().put(DataContainer.Type.PLAYER_DATA, playerData);
+    default void setGiftData(@NotNull DataContainer.Gift giftData) {
+        getData().put(DataContainer.Type.GIFT_DATA, giftData);
     }
 
     @NotNull

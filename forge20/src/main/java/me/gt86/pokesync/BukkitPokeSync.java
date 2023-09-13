@@ -6,6 +6,7 @@ import me.gt86.pokesync.adapter.SnappyGsonAdapter;
 import me.gt86.pokesync.commands.BukkitCommand;
 import me.gt86.pokesync.config.Locales;
 import me.gt86.pokesync.config.Settings;
+import me.gt86.pokesync.data.BukkitSerializer;
 import me.gt86.pokesync.data.DataContainer;
 import me.gt86.pokesync.data.Serializer;
 import me.gt86.pokesync.database.Database;
@@ -69,7 +70,20 @@ public class BukkitPokeSync extends JavaPlugin implements PokeSync, BukkitTask.S
 
         // Prepare serializers
         initialize("data serializers", (plugin) -> {
-            //serializers.put(DataContainer.Type.INVENTORY, new BukkitSerializer.Inventory(this));
+            serializers.put(DataContainer.Type.GIFT_DATA, new BukkitSerializer.Gift(this));
+            serializers.put(DataContainer.Type.STATS, new BukkitSerializer.Stats(this));
+            serializers.put(DataContainer.Type.PARTY, new BukkitSerializer.Party(this));
+            serializers.put(DataContainer.Type.PC, new BukkitSerializer.PC(this));
+            serializers.put(DataContainer.Type.MONEY, new BukkitSerializer.Money(this));
+            serializers.put(DataContainer.Type.MEGA_ITEM, new BukkitSerializer.MegaItem(this));
+            serializers.put(DataContainer.Type.CHARM, new BukkitSerializer.Charm(this));
+            serializers.put(DataContainer.Type.LURE, new BukkitSerializer.Lure(this));
+            serializers.put(DataContainer.Type.SERVER_COSMETIC, new BukkitSerializer.ServerCosmetic(this));
+            serializers.put(DataContainer.Type.POKEDEX, new BukkitSerializer.Pokedex(this));
+            serializers.put(DataContainer.Type.CURRY, new BukkitSerializer.Curry(this));
+            serializers.put(DataContainer.Type.TRAINER_CARD, new BukkitSerializer.TrainerCard(this));
+            serializers.put(DataContainer.Type.DAYCARE, new BukkitSerializer.Daycare(this));
+            serializers.put(DataContainer.Type.QUEST, new BukkitSerializer.Quest(this));
         });
 
 

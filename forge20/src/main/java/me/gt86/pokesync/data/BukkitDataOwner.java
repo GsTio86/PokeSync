@@ -10,8 +10,8 @@ public interface BukkitDataOwner extends DataOwner {
 
     @NotNull
     @Override
-    default Optional<DataContainer.PMPlayerData> getPMPlayerData() {
-        return Optional.of(BukkitDataContainer.PMPlayerData.adapt(getBukkitPlayer()));
+    default Optional<DataContainer.Gift> getGift() {
+        return Optional.of(BukkitDataContainer.Gift.adapt(getBukkitPlayer()));
     }
 
     @NotNull

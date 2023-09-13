@@ -24,7 +24,7 @@ public interface DataContainer {
      * Enumeration of types of {@link DataContainer}s
      */
     enum Type {
-        PLAYER_DATA(true),
+        GIFT_DATA(true),
         STATS(true),
         PARTY(true),
         PC(true),
@@ -64,11 +64,12 @@ public interface DataContainer {
 
     }
 
-    interface PMPlayerData extends DataContainer {
+    interface Gift extends DataContainer {
 
-        PlayerData getPlayerData();
+        GiftData getGiftData();
 
-        void setPlayerData(PlayerData playerDataData);
+        void setGiftData(GiftData giftData);
+
     }
 
     interface Stats extends DataContainer {

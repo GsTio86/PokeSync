@@ -34,8 +34,8 @@ public interface DataOwner extends MutableDataStore {
 
     default Optional<? extends DataContainer> getTypeObj(DataContainer.Type type) {
         switch (type) {
-            case PLAYER_DATA:
-                return getPMPlayerData();
+            case GIFT_DATA:
+                return getGift();
             case STATS:
                 return getStats();
             case PARTY:

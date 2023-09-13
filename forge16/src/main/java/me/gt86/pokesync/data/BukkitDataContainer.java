@@ -20,6 +20,7 @@ import com.pixelmonmod.pixelmon.enums.EnumFeatureState;
 import com.pixelmonmod.pixelmon.enums.EnumMegaItem;
 import com.pixelmonmod.pixelmon.enums.EnumMegaItemsUnlocked;
 import com.pixelmonmod.pixelmon.enums.EnumTrainerCardColor;
+import me.gt86.pokesync.adapter.Adaptable;
 import me.gt86.pokesync.data.type.*;
 import me.gt86.pokesync.player.BukkitUser;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -33,42 +34,43 @@ import java.util.*;
 
 public abstract class BukkitDataContainer implements DataContainer {
 
-    public static class PMPlayerData implements DataContainer.PMPlayerData {
-        private PlayerData playerData;
+    public static class Gift implements DataContainer.Gift, Adaptable {
+        private GiftData giftData;
 
-        private PMPlayerData(@NotNull Player player) {
+        private Gift(@NotNull Player player) {
             CompoundNBT nbt = new CompoundNBT();
             StorageProxy.getParty(player.getUniqueId()).playerData.writeToNBT(nbt);
-            this.playerData = new PlayerData(nbt.toString());
+            this.giftData = new GiftData(nbt.toString());
         }
 
         @NotNull
-        public static BukkitDataContainer.PMPlayerData adapt(@NotNull Player player) {
-            return new BukkitDataContainer.PMPlayerData(player);
+        public static BukkitDataContainer.Gift adapt(@NotNull Player player) {
+            return new BukkitDataContainer.Gift(player);
         }
 
         @Override
         public void apply(@NotNull DataOwner user) throws IllegalStateException {
             Player player = ((BukkitUser) user).getPlayer();
             try {
-                StorageProxy.getParty(player.getUniqueId()).playerData.readFromNBT(Objects.requireNonNull(JsonToNBT.parseTag(getPlayerData().data)));
+                StorageProxy.getParty(player.getUniqueId()).playerData.readFromNBT(Objects.requireNonNull(JsonToNBT.parseTag(getGiftData().data)));
             } catch (Exception e) {
                 throw new IllegalStateException("Failed to apply pixelmon playerData", e);
             }
         }
 
         @Override
-        public PlayerData getPlayerData() {
-            return playerData;
+        public GiftData getGiftData() {
+            return giftData;
         }
 
         @Override
-        public void setPlayerData(PlayerData playerData) {
-            this.playerData = playerData;
+        public void setGiftData(GiftData giftData) {
+            this.giftData = giftData;
         }
+
     }
 
-    public static class Stats implements DataContainer.Stats {
+    public static class Stats implements DataContainer.Stats, Adaptable {
         private StatsData statsData;
 
         private Stats(@NotNull Player player) {
@@ -103,7 +105,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class Party implements DataContainer.Party {
+    public static class Party implements DataContainer.Party, Adaptable {
 
         private PartyData partyData;
 
@@ -156,7 +158,7 @@ public abstract class BukkitDataContainer implements DataContainer {
     }
 
 
-    public static class PC implements DataContainer.PC {
+    public static class PC implements DataContainer.PC, Adaptable {
 
         private PCData pcData;
 
@@ -219,7 +221,7 @@ public abstract class BukkitDataContainer implements DataContainer {
     }
 
 
-    public static class Money implements DataContainer.Money {
+    public static class Money implements DataContainer.Money, Adaptable {
         private MoneyData moneyData;
 
         private Money(@NotNull Player player) {
@@ -260,7 +262,7 @@ public abstract class BukkitDataContainer implements DataContainer {
     }
 
 
-    public static class MegaItem implements DataContainer.MegaItem {
+    public static class MegaItem implements DataContainer.MegaItem, Adaptable {
         private MegaItemData megaItemData;
 
         private MegaItem(@NotNull Player player) {
@@ -314,7 +316,7 @@ public abstract class BukkitDataContainer implements DataContainer {
     }
 
 
-    public static class Charm implements DataContainer.Charm {
+    public static class Charm implements DataContainer.Charm, Adaptable {
 
         CharmData charmData;
 
@@ -355,7 +357,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class Lure implements DataContainer.Lure {
+    public static class Lure implements DataContainer.Lure, Adaptable {
         LureData lureData;
 
         private Lure(@NotNull Player player) {
@@ -400,7 +402,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class ServerCosmetic implements DataContainer.ServerCosmetic {
+    public static class ServerCosmetic implements DataContainer.ServerCosmetic, Adaptable {
 
         ServerCosmeticData serverCosmeticData;
 
@@ -447,7 +449,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class Pokedex implements DataContainer.Pokedex {
+    public static class Pokedex implements DataContainer.Pokedex, Adaptable {
 
         PokedexData pokedexData;
 
@@ -487,7 +489,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class Curry implements DataContainer.Curry {
+    public static class Curry implements DataContainer.Curry, Adaptable {
 
         CurryData curryData;
 
@@ -523,7 +525,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class TrainerCard implements DataContainer.TrainerCard {
+    public static class TrainerCard implements DataContainer.TrainerCard, Adaptable {
 
         TrainerCardData trainerCardData;
 
@@ -558,7 +560,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class Daycare implements DataContainer.Daycare {
+    public static class Daycare implements DataContainer.Daycare, Adaptable {
 
         DaycareData daycareData;
 
@@ -599,7 +601,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         }
     }
 
-    public static class Quest implements DataContainer.Quest {
+    public static class Quest implements DataContainer.Quest, Adaptable {
 
         QuestData questData;
 

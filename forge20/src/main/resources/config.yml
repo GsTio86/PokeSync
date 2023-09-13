@@ -36,19 +36,20 @@ synchronization:
   notification_display_slot: ACTION_BAR
   network_latency_milliseconds: 500
   features:
-    stats: true
-    party: true
-    pc: true
     money: true
-    megaitem: true
-    charm: true
-    lure: true
-    server_cosmetics: true
-    pokedex: true
-    curry: true
-    trainer_card: true
     daycare: true
-    quests: true
+    party: true
+    charm: true
+    pokedex: true
+    server_cosmetic: true
+    gift_data: true
+    trainer_card: true
+    stats: true
+    curry: true
+    pc: true
+    lure: true
+    quest: true
+    mega_item: true
   event_priorities:
     join_listener: LOWEST
     quit_listener: LOWEST
