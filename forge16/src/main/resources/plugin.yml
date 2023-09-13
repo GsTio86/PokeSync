@@ -13,7 +13,7 @@ libraries:
   - 'org.xerial.snappy:snappy-java:1.1.9.1'
 commands:
   pokesync:
-    usage: '/<command> <update/info/reload/migrate>'
+    usage: '/<command> <reload>'
     description: 'Manage the PokeSync plugin'
   pmuserdata:
     usage: '/<command> <view/list/delete/restore/pin/dump> <username> [version_uuid]'

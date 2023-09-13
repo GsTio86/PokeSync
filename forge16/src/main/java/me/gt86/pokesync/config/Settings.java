@@ -14,115 +14,112 @@ import java.util.*;
 public class Settings {
     // Top-level settings
     @YamlKey("language")
-    private final String language = "en-gb";
-
-    @YamlKey("check_for_updates")
-    private final boolean checkForUpdates = true;
+    private String language = "en-gb";
 
     @YamlKey("cluster_id")
-    private final String clusterId = "";
+    private String clusterId = "";
 
     @YamlKey("debug_logging")
-    private final boolean debugLogging = false;
+    private boolean debugLogging = false;
 
     @YamlKey("brigadier_tab_completion")
-    private final boolean brigadierTabCompletion = false;
+    private boolean brigadierTabCompletion = false;
 
 
     // Database settings
     @YamlComment("Type of database to use (MYSQL, MARIADB)")
     @YamlKey("database.material")
-    private final Database.Type databaseType = Database.Type.MYSQL;
+    private Database.Type databaseType = Database.Type.MYSQL;
 
     @YamlComment("Database connection settings")
     @YamlKey("database.credentials.host")
-    private final String mySqlHost = "localhost";
+    private String mySqlHost = "localhost";
 
     @YamlKey("database.credentials.port")
-    private final int mySqlPort = 3306;
+    private int mySqlPort = 3306;
 
     @YamlKey("database.credentials.database")
-    private final String mySqlDatabase = "PokeSync";
+    private String mySqlDatabase = "PokeSync";
 
     @YamlKey("database.credentials.username")
-    private final String mySqlUsername = "root";
+    private String mySqlUsername = "root";
 
     @YamlKey("database.credentials.password")
-    private final String mySqlPassword = "pa55w0rd";
+    private String mySqlPassword = "pa55w0rd";
 
     @YamlKey("database.credentials.parameters")
-    private final String mySqlConnectionParameters = "?autoReconnect=true&useSSL=false";
+    private String mySqlConnectionParameters = "?autoReconnect=true&useSSL=false";
 
     @YamlComment("MySQL connection pool properties")
     @YamlKey("database.connection_pool.maximum_pool_size")
-    private final int mySqlConnectionPoolSize = 10;
+    private int mySqlConnectionPoolSize = 10;
 
     @YamlKey("database.connection_pool.minimum_idle")
-    private final int mySqlConnectionPoolIdle = 10;
+    private int mySqlConnectionPoolIdle = 10;
 
     @YamlKey("database.connection_pool.maximum_lifetime")
-    private final long mySqlConnectionPoolLifetime = 1800000;
+    private long mySqlConnectionPoolLifetime = 1800000;
 
     @YamlKey("database.connection_pool.keepalive_time")
-    private final long mySqlConnectionPoolKeepAlive = 0;
+    private long mySqlConnectionPoolKeepAlive = 0;
 
     @YamlKey("database.connection_pool.connection_timeout")
-    private final long mySqlConnectionPoolTimeout = 5000;
+    private long mySqlConnectionPoolTimeout = 5000;
 
     @YamlKey("database.table_names")
-    private final Map<String, String> tableNames = TableName.getDefaults();
+    private Map<String, String> tableNames = TableName.getDefaults();
 
 
     // Redis settings
     @YamlComment("Redis connection settings")
     @YamlKey("redis.credentials.host")
-    private final String redisHost = "localhost";
+    private String redisHost = "localhost";
 
     @YamlKey("redis.credentials.port")
-    private final int redisPort = 6379;
+    private int redisPort = 6379;
 
     @YamlKey("redis.credentials.password")
-    private final String redisPassword = "";
+    private String redisPassword = "";
 
     @YamlKey("redis.use_ssl")
-    private final boolean redisUseSsl = false;
+    private boolean redisUseSsl = false;
 
 
     // Synchronization settings
     @YamlComment("Synchronization settings")
     @YamlKey("synchronization.max_user_data_snapshots")
-    private final int maxUserDataSnapshots = 16;
+    private int maxUserDataSnapshots = 16;
 
     @YamlKey("synchronization.save_on_world_save")
-    private final boolean saveOnWorldSave = true;
+    private boolean saveOnWorldSave = true;
 
     @YamlKey("synchronization.save_on_death")
-    private final boolean saveOnDeath = false;
+    private boolean saveOnDeath = false;
 
     @YamlKey("synchronization.save_empty_drops_on_death")
-    private final boolean saveEmptyDropsOnDeath = true;
+    private boolean saveEmptyDropsOnDeath = true;
 
     @YamlKey("synchronization.compress_data")
-    private final boolean compressData = true;
+    private boolean compressData = true;
 
     @YamlComment("Where to display sync notifications (ACTION_BAR, CHAT, TOAST or NONE)")
     @YamlKey("synchronization.notification_display_slot")
-    private final Locales.NotificationSlot notificationSlot = Locales.NotificationSlot.ACTION_BAR;
+    private Locales.NotificationSlot notificationSlot = Locales.NotificationSlot.ACTION_BAR;
 
     @YamlKey("synchronization.synchronise_dead_players_changing_server")
-    private final boolean synchroniseDeadPlayersChangingServer = true;
+    private boolean synchroniseDeadPlayersChangingServer = true;
 
     @YamlKey("synchronization.network_latency_milliseconds")
-    private final int networkLatencyMilliseconds = 500;
+    private int networkLatencyMilliseconds = 500;
 
     @YamlKey("synchronization.features")
-    private final Map<String, Boolean> synchronizationFeatures = DataContainer.Type.getDefaults();
+    private Map<String, Boolean> synchronizationFeatures = DataContainer.Type.getDefaults();
 
     @YamlKey("synchronization.blacklisted_commands_while_locked")
-    private final List<String> blacklistedCommandsWhileLocked = new ArrayList<>(List.of("*"));
+    private List<String> blacklistedCommandsWhileLocked = new ArrayList<>(List.of("*"));
 
     @YamlKey("synchronization.event_priorities")
-    private final Map<String, String> synchronizationEventPriorities = EventListener.ListenerType.getDefaults();
+    private Map<String, String> synchronizationEventPriorities = EventListener.ListenerType.getDefaults();
 
 
     // Zero-args constructor for instantiation via Annotaml
@@ -133,10 +130,6 @@ public class Settings {
     @NotNull
     public String getLanguage() {
         return language;
-    }
-
-    public boolean doCheckForUpdates() {
-        return checkForUpdates;
     }
 
     @NotNull
