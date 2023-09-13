@@ -162,20 +162,20 @@ public abstract class BukkitDataContainer implements DataContainer {
         private PCData pcData;
 
         private PC(@NotNull Player player) {
-            Map<BoxData, PokemonData[]> data = new HashMap<>();
-            PokemonData[] pokemonData = new PokemonData[30];
+            List<PCData.BoxWithPokemon> boxes = new ArrayList<>();
             PCStorage pcStorage = StorageProxy.getPCForPlayer(player.getUniqueId());
             for (int box = 0; box < pcStorage.getBoxCount(); box++) {
                 PCBox pcBox = pcStorage.getBox(box);
+                PokemonData[] pokemonData = new PokemonData[30];
                 for (int slot = 0; slot < pokemonData.length; slot++) {
                     Pokemon pokemon = pcStorage.get(box, slot);
                     if (pokemon != null) {
                         pokemonData[slot] = new PokemonData(pokemon.writeToNBT(new CompoundTag()).toString());
                     }
                 }
-                data.put(new BoxData(pcBox.boxNumber, pcBox.getName(), pcBox.getWallpaper()), pokemonData);
+                boxes.add(new PCData.BoxWithPokemon(new BoxData(pcBox.boxNumber, pcBox.getName(), pcBox.getWallpaper()), pokemonData));
             }
-            this.pcData = new PCData(data);
+            this.pcData = new PCData(boxes);
         }
 
         @NotNull
@@ -185,13 +185,14 @@ public abstract class BukkitDataContainer implements DataContainer {
 
         public void apply(@NotNull DataOwner user) throws IllegalStateException {
             ServerPlayer serverPlayer = ((BukkitUser) user).getServerPlayer();
-            Map<BoxData, PokemonData[]> data = pcData.pcStorage;
+            List<PCData.BoxWithPokemon> boxes = new ArrayList<>();
             PCStorage pcStorage = StorageProxy.getPCForPlayer(serverPlayer.getUUID());
-            for (BoxData boxData : data.keySet()) {
+            for (PCData.BoxWithPokemon boxWithPokemon : boxes) {
+                BoxData boxData = boxWithPokemon.boxData;
+                PokemonData[] pokemonData = boxWithPokemon.pokemonData;
                 PCBox pcBox = pcStorage.getBox(boxData.box);
                 pcBox.setName(boxData.name);
                 pcBox.setWallpaper(boxData.wallpaper);
-                PokemonData[] pokemonData = data.get(boxData);
                 for (int slot = 0; slot < pokemonData.length; slot++) {
                     try {
                         CompoundTag nbt = TagParser.parseTag(pokemonData[slot].data);

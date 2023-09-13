@@ -2,15 +2,29 @@ package me.gt86.pokesync.data.type;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Map;
+import java.util.List;
 
 public class PCData {
     public static final String PC_STORAGE = "pcStorage";
 
     @SerializedName(PC_STORAGE)
-    public Map<BoxData, PokemonData[]> pcStorage;
+    public List<BoxWithPokemon> pcStorage;
 
-    public PCData(final Map<BoxData, PokemonData[]> pcStorage) {
+    public PCData(final List<BoxWithPokemon> pcStorage) {
         this.pcStorage = pcStorage;
     }
+
+
+    public static class BoxWithPokemon {
+        @SerializedName("boxData")
+        public BoxData boxData;
+        @SerializedName("pokemonData")
+        public PokemonData[] pokemonData;
+
+        public BoxWithPokemon(final BoxData boxData, final PokemonData[] pokemonData) {
+            this.boxData = boxData;
+            this.pokemonData = pokemonData;
+        }
+    }
 }
+
