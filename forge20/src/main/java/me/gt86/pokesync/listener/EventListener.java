@@ -193,8 +193,7 @@ public abstract class EventListener {
      */
     public enum ListenerType {
         JOIN_LISTENER(Priority.LOWEST),
-        QUIT_LISTENER(Priority.LOWEST),
-        DEATH_LISTENER(Priority.NORMAL);
+        QUIT_LISTENER(Priority.LOWEST);
 
         private final Priority defaultPriority;
 

@@ -93,21 +93,12 @@ public class Settings {
     @YamlKey("synchronization.save_on_world_save")
     private boolean saveOnWorldSave = true;
 
-    @YamlKey("synchronization.save_on_death")
-    private boolean saveOnDeath = false;
-
-    @YamlKey("synchronization.save_empty_drops_on_death")
-    private boolean saveEmptyDropsOnDeath = true;
-
     @YamlKey("synchronization.compress_data")
     private boolean compressData = true;
 
     @YamlComment("Where to display sync notifications (ACTION_BAR, CHAT, TOAST or NONE)")
     @YamlKey("synchronization.notification_display_slot")
     private Locales.NotificationSlot notificationSlot = Locales.NotificationSlot.ACTION_BAR;
-
-    @YamlKey("synchronization.synchronise_dead_players_changing_server")
-    private boolean synchroniseDeadPlayersChangingServer = true;
 
     @YamlKey("synchronization.network_latency_milliseconds")
     private int networkLatencyMilliseconds = 500;
@@ -231,15 +222,6 @@ public class Settings {
         return saveOnWorldSave;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean doSaveOnDeath() {
-        return saveOnDeath;
-    }
-
-    public boolean doSaveEmptyDropsOnDeath() {
-        return saveEmptyDropsOnDeath;
-    }
-
     public boolean doCompressData() {
         return compressData;
     }
@@ -247,10 +229,6 @@ public class Settings {
     @NotNull
     public Locales.NotificationSlot getNotificationDisplaySlot() {
         return notificationSlot;
-    }
-
-    public boolean isSynchroniseDeadPlayersChangingServer() {
-        return synchroniseDeadPlayersChangingServer;
     }
 
     public int getNetworkLatencyMilliseconds() {
@@ -307,48 +285,4 @@ public class Settings {
                 .toArray(Map.Entry[]::new));
         }
     }
-
-    /**
-     * Represents enabled synchronisation features
-     */
-    public enum SynchronizationFeature {
-        INVENTORIES(true),
-        ENDER_CHESTS(true),
-        HEALTH(true),
-        MAX_HEALTH(true),
-        HUNGER(true),
-        EXPERIENCE(true),
-        POTION_EFFECTS(true),
-        ADVANCEMENTS(true),
-        GAME_MODE(true),
-        STATISTICS(true),
-        PERSISTENT_DATA_CONTAINER(false),
-        LOCKED_MAPS(false),
-        LOCATION(false);
-
-        private final boolean enabledByDefault;
-
-        SynchronizationFeature(boolean enabledByDefault) {
-            this.enabledByDefault = enabledByDefault;
-        }
-
-        @NotNull
-        private Map.Entry<String, Boolean> toEntry() {
-            return Map.entry(name().toLowerCase(Locale.ENGLISH), enabledByDefault);
-        }
-
-        @SuppressWarnings("unchecked")
-        @NotNull
-        private static Map<String, Boolean> getDefaults() {
-            return Map.ofEntries(Arrays.stream(values())
-                .map(SynchronizationFeature::toEntry)
-                .toArray(Map.Entry[]::new));
-        }
-
-        public boolean isEnabledByDefault() {
-            return enabledByDefault;
-        }
-
-    }
-
 }
