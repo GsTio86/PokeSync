@@ -1,6 +1,6 @@
 # 🌟 PokeSync - Pixelmon Sync Plugin 🌟
 
-A Spigot plugin specifically designed to synchronize your Pixelmon player data effortlessly. Inspired by HuskSync and crafted with some of their code, PokeSync ensures smooth and effective data synchronization.
+A Spigot plugin specifically designed to synchronize your Pixelmon player data effortlessly. Inspired by [HuskSync](https://github.com/WiIIiam278/HuskSync) and crafted with some of their code, PokeSync ensures smooth and effective data synchronization.
 
 ## 🚀 Features
 - 🎯 **Flexible Configuration**: Easily choose the data you want to sync through our config files.
