@@ -38,8 +38,6 @@ repositories {
     maven { url = 'https://oss.sonatype.org/content/repositories/central' }
     maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url = 'https://repo.minebench.de' }
-    maven { url = 'https://mvn-repo.arim.space/lesser-gpl3/' }
-
     maven { url 'https://repo.codemc.io/repository/maven-public/' }
     maven { url 'https://repo.alessiodp.com/releases/' }
     maven { url 'https://jitpack.io' }
@@ -62,7 +60,6 @@ ext {
 dependencies {
     minecraft "net.minecraftforge:forge:1.20.1-47.1.44"
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
-
     compileOnly fileTree(dir: 'C:/Libraries/Forge/', include: 'Pixelmon-1.20.1-*.jar')
 
     compileOnly 'org.xerial.snappy:snappy-java:1.1.9.1'

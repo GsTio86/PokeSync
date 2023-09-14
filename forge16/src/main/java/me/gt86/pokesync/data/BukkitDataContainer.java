@@ -13,8 +13,6 @@ import com.pixelmonmod.pixelmon.api.util.helpers.NetworkHelper;
 import com.pixelmonmod.pixelmon.comm.EnumUpdateType;
 import com.pixelmonmod.pixelmon.comm.packetHandlers.ServerCosmeticsUpdatePacket;
 import com.pixelmonmod.pixelmon.comm.packetHandlers.clientStorage.UpdateClientPlayerDataPacket;
-import com.pixelmonmod.pixelmon.comm.packetHandlers.clientStorage.newStorage.SetTempMode;
-import com.pixelmonmod.pixelmon.comm.packetHandlers.clientStorage.newStorage.pc.ClientInitializePCPacket;
 import com.pixelmonmod.pixelmon.comm.packetHandlers.daycare.SendEntireDayCarePacket;
 import com.pixelmonmod.pixelmon.enums.EnumFeatureState;
 import com.pixelmonmod.pixelmon.enums.EnumMegaItem;
@@ -27,6 +25,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,7 +75,7 @@ public abstract class BukkitDataContainer implements DataContainer {
         private Stats(@NotNull Player player) {
             CompoundNBT nbt = new CompoundNBT();
             StorageProxy.getParty(player.getUniqueId()).stats.writeToNBT(nbt);
-            this.statsData = new StatsData(nbt.toString());
+            this.statsData = new StatsData(nbt.toString(), statsData.starterPicked, statsData.battleEnabled);
         }
 
         @NotNull
@@ -88,7 +87,10 @@ public abstract class BukkitDataContainer implements DataContainer {
         public void apply(@NotNull DataOwner user) throws IllegalStateException {
             Player player = ((BukkitUser) user).getPlayer();
             try {
-                StorageProxy.getParty(player.getUniqueId()).stats.readFromNBT(Objects.requireNonNull(JsonToNBT.parseTag(getStatsData().data)));
+                PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+                storage.stats.readFromNBT(Objects.requireNonNull(JsonToNBT.parseTag(getStatsData().data)));
+                storage.starterPicked = getStatsData().starterPicked;
+                storage.battleEnabled = getStatsData().battleEnabled;
             } catch (Exception e) {
                 throw new IllegalStateException("Failed to apply pixelmon stats", e);
             }
@@ -115,9 +117,7 @@ public abstract class BukkitDataContainer implements DataContainer {
             for (int i = 0; i < PlayerPartyStorage.MAX_PARTY; i++) {
                 Pokemon pokemon = storage.get(i);
                 if (pokemon != null) {
-                    if (storage.inTemporaryMode()) {
-                        party.put(i, pokemon.writeToNBT(new CompoundNBT()).toString());
-                    }
+                    party.put(i, pokemon.writeToNBT(new CompoundNBT()).toString());
                 }
             }
             this.partyData = new PartyData(party, storage.inTemporaryMode(), storage.getTempPartyColor());
@@ -132,19 +132,19 @@ public abstract class BukkitDataContainer implements DataContainer {
             ServerPlayerEntity serverPlayer = ((BukkitUser) user).getServerPlayer();
             PlayerPartyStorage storage = StorageProxy.getParty(serverPlayer.getUUID());
             Map<Integer, String> data = partyData.party;
-            for (int slot : data.keySet()) {
-                try {
-                    CompoundNBT nbt = JsonToNBT.parseTag(data.get(slot));
-                    Pokemon pokemon = PokemonFactory.create(nbt);
-                    storage.set(slot, pokemon);
-                } catch (CommandSyntaxException e) {
-                    throw new IllegalStateException("Failed to apply pixelmon party", e);
+            for (int i = 0; i < PartyStorage.MAX_PARTY; i++) {
+                if (data.containsKey(i)){
+                    try {
+                        CompoundNBT nbt = JsonToNBT.parseTag(data.get(i));
+                        Pokemon pokemon = PokemonFactory.create(nbt);
+                        storage.set(i, pokemon);
+                    } catch (CommandSyntaxException e) {
+                        throw new IllegalStateException("Failed to apply pixelmon party", e);
+                    }
+                } else {
+                    storage.set(i, null);
                 }
-            }
-            if (serverPlayer != null) {
-                NetworkHelper.sendPacket(new SetTempMode(partyData.tempMode, partyData.colorData.toColor()), serverPlayer);
-                for (int i = 0; i < 6; i++)
-                    storage.notifyListeners(new StoragePosition(-1, i), storage.get(i), EnumUpdateType.CLIENT);
+                storage.notifyListeners(new StoragePosition(-1, i), storage.get(i), EnumUpdateType.CLIENT);
             }
         }
 
@@ -163,20 +163,10 @@ public abstract class BukkitDataContainer implements DataContainer {
         private PCData pcData;
 
         private PC(@NotNull Player player) {
-            List<PCData.BoxWithPokemon> boxes = new ArrayList<>();
             PCStorage pcStorage = StorageProxy.getPCForPlayer(player.getUniqueId());
-            for (int box = 0; box < pcStorage.getBoxCount(); box++) {
-                PCBox pcBox = pcStorage.getBox(box);
-                PokemonData[] pokemonData = new PokemonData[30];
-                for (int slot = 0; slot < pokemonData.length; slot++) {
-                    Pokemon pokemon = pcStorage.get(box, slot);
-                    if (pokemon != null) {
-                        pokemonData[slot] = new PokemonData(pokemon.writeToNBT(new CompoundNBT()).toString());
-                    }
-                }
-                boxes.add(new PCData.BoxWithPokemon(new BoxData(pcBox.boxNumber, pcBox.getName(), pcBox.getWallpaper()), pokemonData));
-            }
-            this.pcData = new PCData(boxes);
+            CompoundNBT nbt = new CompoundNBT();
+            pcStorage.writeToNBT(nbt);
+            this.pcData = new PCData(nbt.toString());
         }
 
         @NotNull
@@ -186,27 +176,17 @@ public abstract class BukkitDataContainer implements DataContainer {
 
         public void apply(@NotNull DataOwner user) throws IllegalStateException {
             ServerPlayerEntity serverPlayer = ((BukkitUser) user).getServerPlayer();
-            List<PCData.BoxWithPokemon> boxes = new ArrayList<>();
-            PCStorage pcStorage = StorageProxy.getPCForPlayer(serverPlayer.getUUID());
-            for (PCData.BoxWithPokemon boxWithPokemon : boxes) {
-                BoxData boxData = boxWithPokemon.boxData;
-                PokemonData[] pokemonData = boxWithPokemon.pokemonData;
-                PCBox pcBox = pcStorage.getBox(boxData.box);
-                pcBox.setName(boxData.name);
-                pcBox.setWallpaper(boxData.wallpaper);
-                for (int slot = 0; slot < pokemonData.length; slot++) {
-                    try {
-                        CompoundNBT nbt = JsonToNBT.parseTag(pokemonData[slot].data);
-                        Pokemon pokemon = PokemonFactory.create(nbt);
-                        pcStorage.set(boxData.box, slot, pokemon);
-                    } catch (CommandSyntaxException e) {
-                        throw new IllegalStateException("Failed to apply pixelmon pc", e);
-                    }
+            UUID uuid = serverPlayer.getUUID();
+            try {
+                CompoundNBT nbt = JsonToNBT.parseTag(pcData.data);
+                PCStorage pcStorage = StorageProxy.getPCForPlayer(uuid);
+                pcStorage.readFromNBT(nbt);
+                for (int i = 0; i < PixelmonConfigProxy.getStorage().getComputerBoxes(); i++) {
+                    for (int j = 0; j < PCBox.POKEMON_PER_BOX ; j++)
+                        pcStorage.notifyListeners(new StoragePosition(i, j), pcStorage.getBox(i).get(j), EnumUpdateType.CLIENT);
                 }
-            }
-            if (serverPlayer != null) {
-                NetworkHelper.sendPacket(serverPlayer, new ClientInitializePCPacket(pcStorage));
-                pcStorage.sendContents(serverPlayer);
+            } catch (CommandSyntaxException e) {
+                throw new IllegalStateException("Failed to apply pixelmon pc", e);
             }
         }
 
@@ -508,11 +488,9 @@ public abstract class BukkitDataContainer implements DataContainer {
         public void apply(@NotNull DataOwner user) throws IllegalStateException {
             Player player = ((BukkitUser) user).getPlayer();
             PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
-            int[] data = storage.getCurryData();
             int[] currys = curryData.data;
-            if (data != null && currys != null && data.length >= 26 && currys.length >= 26) {
-                System.arraycopy(currys, 0, data, 0, 26);
-            }
+            ObfuscationReflectionHelper.setPrivateValue(PlayerPartyStorage.class, storage, currys, CurryData.CURRY_DATA);
+
         }
 
         @Override
@@ -582,12 +560,13 @@ public abstract class BukkitDataContainer implements DataContainer {
             ServerPlayerEntity serverPlayer = ((BukkitUser) user).getServerPlayer();
             PlayerPartyStorage storage = StorageProxy.getParty(serverPlayer.getUUID());
             try {
-                PlayerDayCare.readFromNBT(storage, JsonToNBT.parseTag(daycareData.data));
+                PlayerDayCare dayCare = PlayerDayCare.readFromNBT(storage, JsonToNBT.parseTag(daycareData.data));
+                ObfuscationReflectionHelper.setPrivateValue(PlayerPartyStorage.class, storage, dayCare, DaycareData.DAY_CARE);
+                if (serverPlayer != null) {
+                    NetworkHelper.sendPacket(new SendEntireDayCarePacket(storage.getDayCare()), serverPlayer);
+                }
             } catch (Exception e) {
                 throw new IllegalStateException("Failed to apply pixelmon daycare", e);
-            }
-            if (serverPlayer != null) {
-                NetworkHelper.sendPacket(new SendEntireDayCarePacket(storage.getDayCare()), serverPlayer);
             }
         }
 

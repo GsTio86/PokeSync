@@ -28,8 +28,20 @@ public class BukkitUser extends OnlineUser implements BukkitDataOwner {
         this.serverPlayer = ForgeSpigotUtils.getForgePlayer(player);
     }
 
+    private BukkitUser(@NotNull ServerPlayerEntity player, @NotNull PokeSync plugin) {
+        super(player.getUUID(), player.getName().getString());
+        this.plugin = plugin;
+        this.player = ForgeSpigotUtils.getSpigotPlayer(player);
+        this.serverPlayer = player;
+    }
+
     @NotNull
     public static BukkitUser adapt(@NotNull Player player, @NotNull PokeSync plugin) {
+        return new BukkitUser(player, plugin);
+    }
+
+    @NotNull
+    public static BukkitUser adapt(@NotNull ServerPlayerEntity player, @NotNull PokeSync plugin) {
         return new BukkitUser(player, plugin);
     }
 
