@@ -19,6 +19,5 @@ plugins {
 }
 
 rootProject.name = 'PokeSync'
-include 'forge16'
 include 'forge20'
 
