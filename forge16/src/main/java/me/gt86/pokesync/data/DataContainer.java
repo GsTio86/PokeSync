@@ -1,6 +1,6 @@
-package me.gt86.pokesync.data;
+package me.gt86.pokesync.olddata;
 
-import me.gt86.pokesync.data.type.*;
+import me.gt86.pokesync.olddata.type.*;
 import me.gt86.pokesync.player.OnlineUser;
 import org.jetbrains.annotations.NotNull;
 

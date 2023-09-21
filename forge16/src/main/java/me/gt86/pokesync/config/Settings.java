@@ -1,6 +1,6 @@
 package me.gt86.pokesync.config;
 
-import me.gt86.pokesync.data.DataContainer;
+import me.gt86.pokesync.olddata.DataContainer;
 import me.gt86.pokesync.database.Database;
 import me.gt86.pokesync.listener.EventListener;
 import net.william278.annotaml.YamlComment;

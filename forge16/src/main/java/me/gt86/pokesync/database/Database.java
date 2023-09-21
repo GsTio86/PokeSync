@@ -2,8 +2,8 @@ package me.gt86.pokesync.database;
 
 import me.gt86.pokesync.PokeSync;
 import me.gt86.pokesync.config.Settings;
-import me.gt86.pokesync.data.DataSnapshot;
-import me.gt86.pokesync.data.DataSnapshot.SaveCause;
+import me.gt86.pokesync.olddata.DataSnapshot;
+import me.gt86.pokesync.olddata.DataSnapshot.SaveCause;
 import me.gt86.pokesync.player.User;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -134,7 +134,7 @@ public abstract class Database {
      * @param user     The user to add data for
      * @param snapshot The {@link DataSnapshot} to set.
      *                 The implementation should version it with a random UUID and the current timestamp during insertion.
-     * @see me.gt86.pokesync.data.DataOwner#createSnapshot(SaveCause)
+     * @see me.gt86.pokesync.olddata.DataOwner#createSnapshot(SaveCause)
      */
     public void setUserData(@NotNull User user, @NotNull DataSnapshot.Packed snapshot) {
         if (snapshot.getSaveCause() != SaveCause.SERVER_SHUTDOWN) {

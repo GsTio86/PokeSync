@@ -3,7 +3,7 @@ package me.gt86.pokesync.commands.cmd;
 import me.gt86.pokesync.PokeSync;
 import me.gt86.pokesync.commands.Command;
 import me.gt86.pokesync.commands.TabProvider;
-import me.gt86.pokesync.data.DataSnapshot;
+import me.gt86.pokesync.olddata.DataSnapshot;
 import me.gt86.pokesync.player.CommandUser;
 import me.gt86.pokesync.player.User;
 import me.gt86.pokesync.util.DataDumper;

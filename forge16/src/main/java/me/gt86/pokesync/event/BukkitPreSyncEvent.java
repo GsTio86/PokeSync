@@ -2,7 +2,7 @@ package me.gt86.pokesync.event;
 
 
 import me.gt86.pokesync.PokeSync;
-import me.gt86.pokesync.data.DataSnapshot;
+import me.gt86.pokesync.olddata.DataSnapshot;
 import me.gt86.pokesync.player.OnlineUser;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;

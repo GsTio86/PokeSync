@@ -1,4 +1,4 @@
-package me.gt86.pokesync.data;
+package me.gt86.pokesync.olddata;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import org.bukkit.entity.Player;

@@ -3,7 +3,7 @@ package me.gt86.pokesync.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.gt86.pokesync.PokeSync;
-import me.gt86.pokesync.data.DataSnapshot;
+import me.gt86.pokesync.olddata.DataSnapshot;
 import me.gt86.pokesync.player.User;
 import org.jetbrains.annotations.NotNull;
 

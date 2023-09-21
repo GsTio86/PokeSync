@@ -2,7 +2,7 @@ package me.gt86.pokesync.api.event;
 
 
 import me.gt86.pokesync.PokeSync;
-import me.gt86.pokesync.data.DataSnapshot;
+import me.gt86.pokesync.olddata.DataSnapshot;
 import me.gt86.pokesync.event.BukkitEvent;
 import me.gt86.pokesync.event.DataSaveEvent;
 import me.gt86.pokesync.player.User;

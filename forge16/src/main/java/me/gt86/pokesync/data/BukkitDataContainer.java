@@ -1,4 +1,4 @@
-package me.gt86.pokesync.data;
+package me.gt86.pokesync.olddata;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.pixelmonmod.pixelmon.api.config.PixelmonConfigProxy;
@@ -19,7 +19,7 @@ import com.pixelmonmod.pixelmon.enums.EnumMegaItem;
 import com.pixelmonmod.pixelmon.enums.EnumMegaItemsUnlocked;
 import com.pixelmonmod.pixelmon.enums.EnumTrainerCardColor;
 import me.gt86.pokesync.adapter.Adaptable;
-import me.gt86.pokesync.data.type.*;
+import me.gt86.pokesync.olddata.type.*;
 import me.gt86.pokesync.player.BukkitUser;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;

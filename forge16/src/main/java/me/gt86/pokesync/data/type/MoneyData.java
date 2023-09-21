@@ -1,4 +1,4 @@
-package me.gt86.pokesync.data.type;
+package me.gt86.pokesync.olddata.type;
 
 import com.google.gson.annotations.SerializedName;
 

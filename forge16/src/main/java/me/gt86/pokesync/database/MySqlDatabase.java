@@ -3,7 +3,7 @@ package me.gt86.pokesync.database;
 import com.zaxxer.hikari.HikariDataSource;
 import me.gt86.pokesync.PokeSync;
 import me.gt86.pokesync.adapter.DataAdapter;
-import me.gt86.pokesync.data.DataSnapshot;
+import me.gt86.pokesync.olddata.DataSnapshot;
 import me.gt86.pokesync.player.User;
 import org.jetbrains.annotations.NotNull;
 

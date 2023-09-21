@@ -3,7 +3,7 @@ package me.gt86.pokesync.player;
 import de.themoep.minedown.adventure.MineDown;
 import me.gt86.pokesync.BukkitPokeSync;
 import me.gt86.pokesync.PokeSync;
-import me.gt86.pokesync.data.BukkitDataOwner;
+import me.gt86.pokesync.olddata.BukkitDataOwner;
 import me.gt86.pokesync.util.ForgeSpigotUtils;
 import net.kyori.adventure.audience.Audience;
 import net.minecraft.entity.player.ServerPlayerEntity;
