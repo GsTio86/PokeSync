@@ -6,3 +6,9 @@ api-version: 1.20
 description: Pixelmon Data Sync Plugin
 softdepend:
   - HuskSync
+commands:
+  pokesync:
+    aliases:
+      - reloadpokesync
+    description: The reload command for PokeSync.
+    permission: pokesync.admin

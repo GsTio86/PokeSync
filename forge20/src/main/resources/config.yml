@@ -1,0 +1,18 @@
+# Enable/disable pixelmon sync features
+features:
+  pc: true
+  party: true
+  pokedex: true
+  stats: true
+  dollars: true
+  daycare: true
+  mega_item: true
+  charm: true
+  gift_data: true
+  trainer_card: true
+  cosmetic: true
+  lure: true
+  quest: true
+  curry: true
+
+
