@@ -1,6 +1,7 @@
 package me.gt86.pokesync;
 
 import me.gt86.pokesync.command.ReloadCommand;
+import me.gt86.pokesync.data.Config;
 import me.gt86.pokesync.hook.HuskSyncAPIHook;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,20 +21,21 @@ public class PokeSync extends JavaPlugin {
     public void onEnable() {
         instance = this;
         initConfig();
-        initHooks();
         initCommand();
+        initHooks();
     }
-
 
     private void initConfig() {
         saveDefaultConfig();
         this.config = getConfig();
+        loadConfig();
     }
 
-    public void reloadConfig() {
+    public void loadConfig() {
         saveDefaultConfig();
         reloadConfig();
         this.config = getConfig();
+        Config.loadConfig(this.config);
     }
 
     private void initHooks() {
@@ -51,10 +53,6 @@ public class PokeSync extends JavaPlugin {
 
     public static PokeSync getInstance() {
         return instance;
-    }
-
-    public FileConfiguration getConfig() {
-        return this.config;
     }
 
 }

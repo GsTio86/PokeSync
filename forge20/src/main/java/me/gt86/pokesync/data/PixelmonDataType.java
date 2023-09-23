@@ -53,8 +53,4 @@ public enum PixelmonDataType {
     public BukkitData createData(UUID uuid) {
         return constructor.apply(uuid);
     }
-
-    public boolean isEnable() {
-        return PokeSync.getInstance().getConfig().getBoolean("features." + identifier.getKeyValue());
-    }
 }

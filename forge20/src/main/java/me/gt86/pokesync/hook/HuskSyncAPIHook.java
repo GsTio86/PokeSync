@@ -1,6 +1,7 @@
 package me.gt86.pokesync.hook;
 
 import me.gt86.pokesync.PokeSync;
+import me.gt86.pokesync.data.Config;
 import me.gt86.pokesync.data.PixelmonDataType;
 import net.william278.husksync.HuskSync;
 import net.william278.husksync.api.BukkitHuskSyncAPI;
@@ -41,7 +42,7 @@ public class HuskSyncAPIHook implements Listener {
             public void accept(DataSnapshot.Unpacked unpacked) {
                 UUID uuid = event.getUser().getUuid();
                 for (PixelmonDataType type : PixelmonDataType.values()) {
-                    if (type.isEnable()) {
+                    if (Config.isEnable(type)) {
                         unpacked.setData(type.getIdentifier(), type.createData(uuid));
                     }
                 }

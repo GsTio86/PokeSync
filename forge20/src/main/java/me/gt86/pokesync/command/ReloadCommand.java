@@ -15,7 +15,7 @@ public class ReloadCommand implements CommandExecutor {
     }
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        PokeSync.getInstance().reloadConfig();
+        PokeSync.getInstance().loadConfig();
         sender.sendMessage(TextUtils.parseColour(TextUtils.PREFIX + "Reloaded Config!"));
         return false;
     }
