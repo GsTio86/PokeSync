@@ -2,6 +2,7 @@ package me.gt86.pokesync.data;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.pixelmonmod.pixelmon.advancements.PixelmonAdvancements;
 import com.pixelmonmod.pixelmon.api.config.PixelmonConfigProxy;
 import com.pixelmonmod.pixelmon.api.economy.BankAccount;
 import com.pixelmonmod.pixelmon.api.economy.BankAccountProxy;
@@ -47,7 +48,7 @@ public class PixelmonData {
         }
 
         public PC(UUID uuid) {
-            PCStorage pcStorage = StorageProxy.getPCForPlayer(uuid);
+            PCStorage pcStorage = StorageProxy.getPCForPlayerNow(uuid);
             CompoundTag nbt = new CompoundTag();
             pcStorage.writeToNBT(nbt);
             this.data = nbt.toString();
@@ -61,11 +62,11 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PCStorage pcStorage = StorageProxy.getPCForPlayer(player.getUniqueId());
+            PCStorage pcStorage = StorageProxy.getPCForPlayerNow(player.getUniqueId());
             try {
                 CompoundTag nbt = TagParser.parseTag(data);
                 pcStorage.readFromNBT(nbt);
-                for (int i = 0; i < PixelmonConfigProxy.getStorage().getComputerBoxes(); i++) {
+                for (int i = 0; i < PixelmonConfigProxy.getStorage().getComputerBoxes(player.getUniqueId()); i++) {
                     for (int j = 0; j < PCBox.POKEMON_PER_BOX; j++)
                         pcStorage.notifyListeners(new StoragePosition(i, j), pcStorage.getBox(i).get(j), EnumUpdateType.CLIENT);
                 }
@@ -86,7 +87,7 @@ public class PixelmonData {
 
         public Party(UUID uuid) {
             Map<Integer, String> party = new HashMap<>();
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             for (int i = 0; i < PlayerPartyStorage.MAX_PARTY; i++) {
                 Pokemon pokemon = storage.get(i);
                 if (pokemon != null) {
@@ -104,7 +105,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             Map<Integer, String> data = party;
             for (int i = 0; i < PartyStorage.MAX_PARTY; i++) {
                 if (data.containsKey(i)) {
@@ -121,6 +122,8 @@ public class PixelmonData {
                 storage.notifyListeners(new StoragePosition(-1, i), storage.get(i), EnumUpdateType.CLIENT);
             }
         }
+
+
     }
 
     public static class Pokedex extends BukkitData implements Data.Pokedex, Adaptable {
@@ -134,7 +137,7 @@ public class PixelmonData {
 
         public Pokedex(UUID uuid) {
             CompoundTag dex = new CompoundTag();
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             storage.playerPokedex.writeToNBT(dex);
             this.dex = dex.toString();
         }
@@ -147,7 +150,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             try {
                 storage.playerPokedex.readFromNBT(Objects.requireNonNull(TagParser.parseTag(dex)));
             } catch (Exception e) {
@@ -177,7 +180,7 @@ public class PixelmonData {
 
         public Stats(UUID uuid) {
             CompoundTag nbt = new CompoundTag();
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             storage.stats.writeToNBT(nbt);
             this.stats = nbt.toString();
             this.starterPicked = storage.starterPicked;
@@ -193,7 +196,7 @@ public class PixelmonData {
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
             try {
-                PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+                PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
                 storage.stats.readFromNBT(Objects.requireNonNull(TagParser.parseTag(stats)));
                 storage.starterPicked = starterPicked;
                 storage.battleEnabled = battleEnabled;
@@ -213,9 +216,9 @@ public class PixelmonData {
         }
 
         public Money(UUID uuid) {
-            Optional<? extends BankAccount> optionalAccount = BankAccountProxy.getBankAccount(uuid);
-            if (optionalAccount.isPresent()) {
-                this.money = optionalAccount.get().getBalance().intValue();
+            BankAccount account = BankAccountProxy.getBankAccountNow(uuid);
+            if (account != null) {
+                this.money = account.getBalance().intValue();
             } else {
                 this.money = 0;
             }
@@ -230,10 +233,10 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            Optional<? extends BankAccount> optionalAccount = BankAccountProxy.getBankAccount(player.getUniqueId());
-            if (optionalAccount.isPresent()) {
-                optionalAccount.get().setBalance(money);
-                BankAccountProxy.getBankAccount(player.getUniqueId()).get().updatePlayer();
+            BankAccount account = BankAccountProxy.getBankAccountNow(player.getUniqueId());
+            if (account != null) {
+                account.setBalance(money);
+                account.updatePlayer();
             }
         }
     }
@@ -249,7 +252,7 @@ public class PixelmonData {
 
         public Daycare(UUID uuid) {
             CompoundTag nbt = new CompoundTag();
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             storage.getDayCare().writeToNBT(nbt);
             this.daycare = nbt.toString();
         }
@@ -262,7 +265,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             try {
                 PlayerDayCare dayCare = PlayerDayCare.readFromNBT(storage, TagParser.parseTag(daycare));
                 ObfuscationReflectionHelper.setPrivateValue(PlayerPartyStorage.class, storage, dayCare, "dayCare");
@@ -287,7 +290,7 @@ public class PixelmonData {
         }
 
         public MegaItem(UUID uuid) {
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             this.megaItemsUnlocked = storage.getMegaItemsUnlocked().ordinal();
             this.megaItemString = storage.getMegaItem().ordinal();
         }
@@ -301,7 +304,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             storage.setMegaItemsUnlocked(EnumMegaItemsUnlocked.values()[megaItemsUnlocked]);
             storage.setMegaItem(EnumMegaItem.values()[megaItemString], false);
 
@@ -351,7 +354,7 @@ public class PixelmonData {
         }
 
         public Charm(UUID uuid) {
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             this.shinyCharm = storage.getShinyCharm().ordinal();
             this.ovalCharm = storage.getOvalCharm().ordinal();
             this.expCharm = storage.getExpCharm().ordinal();
@@ -368,7 +371,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             storage.setShinyCharm(EnumFeatureState.values()[shinyCharm]);
             storage.setOvalCharm(EnumFeatureState.values()[ovalCharm]);
             storage.setExpCharm(EnumFeatureState.values()[expCharm]);
@@ -388,7 +391,7 @@ public class PixelmonData {
 
         public Gift(UUID uuid) {
             CompoundTag nbt = new CompoundTag();
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             storage.playerData.writeToNBT(nbt);
             this.gift = nbt.toString();
         }
@@ -401,7 +404,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             try {
                 storage.playerData.readFromNBT(Objects.requireNonNull(TagParser.parseTag(gift)));
             } catch (Exception e) {
@@ -420,7 +423,7 @@ public class PixelmonData {
         }
 
         public TrainerCard(UUID uuid) {
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             this.color = storage.trainerCardColor.ordinal();
         }
 
@@ -432,7 +435,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             storage.trainerCardColor = EnumTrainerCardColor.values()[color];
             sendPacket(player.getUniqueId(), new UpdateClientPlayerDataPacket(storage.trainerCardColor));
         }
@@ -448,7 +451,7 @@ public class PixelmonData {
         }
 
         public Cosmetic(UUID uuid) {
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             BitSet set = new BitSet();
             Set<ServerCosmetics> serverCosmetics = storage.getServerCosmetics();
             for (ServerCosmetics serverCosmetic : serverCosmetics) {
@@ -465,7 +468,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             BitSet set = BitSet.valueOf(data);
             Set<ServerCosmetics> serverCosmetics = new HashSet<>();
             for (ServerCosmetics cosmetics : ServerCosmetics.values()) {
@@ -488,7 +491,7 @@ public class PixelmonData {
         }
 
         public Lure(UUID uuid) {
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             ItemStack itemStack = storage.getLureStack();
             CompoundTag nbt = new CompoundTag();
             if (itemStack != null) {
@@ -505,7 +508,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             if (data.isBlank()) {
                 storage.setLureStack(null);
             } else {
@@ -529,7 +532,7 @@ public class PixelmonData {
         }
 
         public Quest(UUID uuid) {
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             CompoundTag nbt = new CompoundTag();
             storage.getQuestData().writeToNBT(nbt);
             this.data = nbt.toString();
@@ -543,7 +546,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             try {
                 storage.getQuestData().readFromNBT(Objects.requireNonNull(TagParser.parseTag(data)));
             } catch (Exception e) {
@@ -562,7 +565,7 @@ public class PixelmonData {
         }
 
         public Curry(UUID uuid) {
-            PlayerPartyStorage storage = StorageProxy.getParty(uuid);
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(uuid);
             this.data = storage.getCurryData();
         }
 
@@ -574,7 +577,7 @@ public class PixelmonData {
         @Override
         public void apply(BukkitUser user, BukkitHuskSync plugin) throws IllegalStateException {
             Player player = user.getPlayer();
-            PlayerPartyStorage storage = StorageProxy.getParty(player.getUniqueId());
+            PlayerPartyStorage storage = StorageProxy.getPartyNow(player.getUniqueId());
             int[] currys = data;
             ObfuscationReflectionHelper.setPrivateValue(PlayerPartyStorage.class, storage, currys, "curryData");
         }

@@ -2,7 +2,7 @@ subprojects {
     apply plugin: 'java'
 
     group = 'me.gt86.pokesync'
-    version = '2.0'
+    version = '2.2'
 
     ext {
         forgeVersion = "none"

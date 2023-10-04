@@ -1,5 +1,8 @@
 package me.gt86.pokesync.hook;
 
+import com.pixelmonmod.pixelmon.api.storage.PCStorage;
+import com.pixelmonmod.pixelmon.api.storage.PlayerPartyStorage;
+import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import me.gt86.pokesync.PokeSync;
 import me.gt86.pokesync.data.Config;
 import me.gt86.pokesync.data.PixelmonDataType;
@@ -7,6 +10,7 @@ import net.william278.husksync.HuskSync;
 import net.william278.husksync.api.BukkitHuskSyncAPI;
 import net.william278.husksync.data.DataSnapshot;
 import net.william278.husksync.event.BukkitDataSaveEvent;
+import net.william278.husksync.event.BukkitSyncCompleteEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,4 +54,15 @@ public class HuskSyncAPIHook implements Listener {
         });
     }
 
+    // Need Test
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onHuskSyncDataComplete(BukkitSyncCompleteEvent event) {
+        UUID uuid = event.getUser().getUuid();
+        PlayerPartyStorage party = StorageProxy.getPartyNow(uuid);
+        PCStorage pc = StorageProxy.getPCForPlayerNow(uuid);
+        if (party != null)
+            StorageProxy.getSaveScheduler().save(party);
+        if (pc != null)
+            StorageProxy.getSaveScheduler().save(pc);
+    }
 }

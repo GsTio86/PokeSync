@@ -21,13 +21,9 @@ public enum PixelmonDataType {
     CHARM(Identifier.from(PokeSync.PLUGIN_ID, "charm"), PixelmonSerializer.Charm::new, PixelmonData.Charm::new),
     GIFTDATA(Identifier.from(PokeSync.PLUGIN_ID, "gift_data"), PixelmonSerializer.Gift::new, PixelmonData.Gift::new),
     TRAINER_CARD(Identifier.from(PokeSync.PLUGIN_ID, "trainer_card"), PixelmonSerializer.TrainerCard::new, PixelmonData.TrainerCard::new),
-
     COSMETIC(Identifier.from(PokeSync.PLUGIN_ID, "cosmetic"), PixelmonSerializer.Cosmetic::new, PixelmonData.Cosmetic::new),
-
     LURE(Identifier.from(PokeSync.PLUGIN_ID, "lure"), PixelmonSerializer.Lure::new, PixelmonData.Lure::new),
-
     QUEST(Identifier.from(PokeSync.PLUGIN_ID, "quest"), PixelmonSerializer.Quest::new, PixelmonData.Quest::new),
-
     CURRY(Identifier.from(PokeSync.PLUGIN_ID, "curry"), PixelmonSerializer.Curry::new, PixelmonData.Curry::new);
 
     private final Identifier identifier;
