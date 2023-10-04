@@ -11,7 +11,7 @@ New Version **2.0** will require **[Husksync v3.0](https://www.spigotmc.org/reso
 
 ## 🌐 Compatibility
 - Supports [**Arclight**](https://github.com/IzzelAliz/Arclight) versions 1.20.1
-- Supports [**Pixelmon Reforged**](https://reforged.gg/) versions 9.2.2
+- Supports [**Pixelmon Reforged**](https://reforged.gg/) versions 9.2.3
 
 ## 📝 Configuration
 You can choose the content to synchronize within the plugin's configuration file.
