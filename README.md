@@ -7,7 +7,7 @@ New Version **2.0** will require **[Husksync v3.0](https://www.spigotmc.org/reso
 ## 🚀 Features
 - 🎯 **Flexible Configuration**: Easily choose the data you want to sync through our config files.
 - 💎 **Comprehensive Data Support**: Party, PC, Money, Daycare, Quest, MegaItem, Charm, Dex, Lure, Cosmetic, and more!
-- 🌐 **Multi-Version Support**: Compatible with different versions of Pixelmon and Arclight.
+- 🌐 **Multi-Version Support**: Compatible with different versions of Pixelmon.
 
 ## 🌐 Compatibility
 - Supports [**Arclight**](https://github.com/IzzelAliz/Arclight) versions 1.20.1
