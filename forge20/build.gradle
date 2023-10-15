@@ -5,10 +5,10 @@ plugins {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-forgeVersion = "1.20.1"
+forgeVersion = "1.20.2"
 
 minecraft {
-    mappings channel: 'official', version: '1.20.1'
+    mappings channel: 'official', version: '1.20.2'
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -41,10 +41,10 @@ repositories {
 
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.20.1-47.1.46"
+    minecraft "net.minecraftforge:forge:1.20.2-48.0.30"
     compileOnly 'org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT'
-    compileOnly "pixelmon:Pixelmon-1.20.1-9.2.3-server:9.2.3"
-    implementation "net.william278:husksync:3.0-7c9ac37"
+    compileOnly "pixelmon:Pixelmon-1.20.2-9.2.4-server:9.2.4"
+    implementation "net.william278:husksync:3.1-cae17f6"
 }
 
 shadowJar {
