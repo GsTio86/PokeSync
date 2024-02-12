@@ -1,3 +1,6 @@
+# Debug mode
+debug: false
+
 # Enable/disable pixelmon sync features
 features:
   pc: true
