@@ -35,16 +35,18 @@ repositories {
     maven { url 'https://nexus.scarsz.me/content/groups/public/' }
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url = 'https://oss.sonatype.org/content/repositories/central' }
-    maven { url 'https://repo.william278.net/snapshots' }
+    maven { url 'https://repo.william278.net/releases' }
 
 }
 
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.20.2-48.0.30"
-    compileOnly 'org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT'
-    compileOnly "pixelmon:Pixelmon-1.20.2-9.2.4-server:9.2.4"
-    implementation "net.william278:husksync:3.1-cae17f6"
+    minecraft "net.minecraftforge:forge:1.20.2-48.1.0"
+
+    compileOnly 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
+    compileOnly "pixelmon:Pixelmon-1.20.2-9.2.6-server:9.2.6"
+
+    implementation "net.william278.husksync:husksync-bukkit:3.3.1"
 }
 
 shadowJar {
