@@ -6,9 +6,9 @@ import com.pixelmonmod.pixelmon.api.storage.StorageProxy;
 import me.gt86.pokesync.PokeSync;
 import me.gt86.pokesync.data.Config;
 import me.gt86.pokesync.data.PixelmonDataType;
+import me.gt86.pokesync.utils.LogUtils;
 import net.william278.husksync.HuskSync;
-import net.william278.husksync.api.BukkitHuskSyncAPI;
-import net.william278.husksync.data.DataSnapshot;
+import net.william278.husksync.api.HuskSyncAPI;
 import net.william278.husksync.event.BukkitDataSaveEvent;
 import net.william278.husksync.event.BukkitSyncCompleteEvent;
 import org.bukkit.Bukkit;
@@ -17,52 +17,59 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 
 public class HuskSyncAPIHook implements Listener {
 
-    private final PokeSync pokeSync;
-    private final BukkitHuskSyncAPI huskSyncAPI;
+    private final HuskSyncAPI huskSyncAPI;
 
-    public HuskSyncAPIHook(PokeSync pokeSync) {
-        this.pokeSync = pokeSync;
-        this.huskSyncAPI = BukkitHuskSyncAPI.getInstance();
+    public HuskSyncAPIHook() {
+        this.huskSyncAPI = HuskSyncAPI.getInstance();
         register();
     }
 
     private void register() {
         HuskSync huskSync = huskSyncAPI.getPlugin();
         for (PixelmonDataType type : PixelmonDataType.values()) {
-            huskSyncAPI.registerDataSerializer(type.getIdentifier(), type.createSerializer(huskSync));
+            if (Config.isEnable(type)) {
+                huskSyncAPI.registerDataSerializer(type.getIdentifier(), type.createSerializer(huskSync));
+            }
         }
-        Bukkit.getServer().getPluginManager().registerEvents(this, this.pokeSync);
+        Bukkit.getPluginManager().registerEvents(this, PokeSync.getInstance());
     }
-
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onHuskSyncDataSave(BukkitDataSaveEvent event) {
-        event.editData(new Consumer<DataSnapshot.Unpacked>() {
-            @Override
-            public void accept(DataSnapshot.Unpacked unpacked) {
-                UUID uuid = event.getUser().getUuid();
-                for (PixelmonDataType type : PixelmonDataType.values()) {
-                    if (Config.isEnable(type)) {
-                        unpacked.setData(type.getIdentifier(), type.createData(uuid));
+    public void onBukkitDataSave(BukkitDataSaveEvent event) {
+        event.editData((unpacked -> {
+            UUID uuid = event.getUser().getUuid();
+            PCStorage pc = StorageProxy.getPCForPlayerNow(uuid);
+            PlayerPartyStorage party = StorageProxy.getPartyNow(uuid);
+            for (PixelmonDataType type : PixelmonDataType.values()) {
+                if (Config.isEnable(type)) {
+                    if (type == PixelmonDataType.PC) {
+                        unpacked.setData(type.getIdentifier(), type.createData(pc));
+                    } else {
+                        unpacked.setData(type.getIdentifier(), type.createData(party));
                     }
+                    LogUtils.debug(String.format("Data saved for %s for %s", event.getUser().getUsername(), type.getIdentifier()));
                 }
             }
-        });
+            LogUtils.debug(String.format("PokeSync saved for data [%s]", unpacked.getId()));
+        }));
     }
 
-    // Need Test
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onHuskSyncDataComplete(BukkitSyncCompleteEvent event) {
+    public void onBukkitDataComplete(BukkitSyncCompleteEvent event) {
         UUID uuid = event.getUser().getUuid();
         PlayerPartyStorage party = StorageProxy.getPartyNow(uuid);
         PCStorage pc = StorageProxy.getPCForPlayerNow(uuid);
-        if (party != null)
+        if (party != null) {
             StorageProxy.getSaveScheduler().save(party);
-        if (pc != null)
+            LogUtils.debug(String.format("Load Party saved for %s | %d pokemon", event.getUser().getUsername(), party.countAll()));
+        }
+        if (pc != null) {
             StorageProxy.getSaveScheduler().save(pc);
+            LogUtils.debug(String.format("Load PC saved for %s | %d pokemon", event.getUser().getUsername(), pc.countAll()));;
+        }
     }
+
 }

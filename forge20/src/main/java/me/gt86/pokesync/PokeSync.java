@@ -40,7 +40,7 @@ public class PokeSync extends JavaPlugin {
 
     private void initHooks() {
         if (Bukkit.getPluginManager().getPlugin("HuskSync") != null) {
-            this.huskSyncAPIHook = new HuskSyncAPIHook(this);
+            this.huskSyncAPIHook = new HuskSyncAPIHook();
             getLogger().info("PokeSync has been enabled!");
         } else {
             getLogger().warning("HuskSync is not installed, PokeSync will not work!");
