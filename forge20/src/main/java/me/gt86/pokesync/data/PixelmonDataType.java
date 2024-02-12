@@ -1,5 +1,6 @@
 package me.gt86.pokesync.data;
 
+import com.pixelmonmod.pixelmon.api.storage.PokemonStorage;
 import me.gt86.pokesync.PokeSync;
 import net.william278.husksync.HuskSync;
 import net.william278.husksync.data.BukkitData;
@@ -25,14 +26,13 @@ public enum PixelmonDataType {
     LURE(Identifier.from(PokeSync.PLUGIN_ID, "lure"), PixelmonSerializer.Lure::new, PixelmonData.Lure::new),
     QUEST(Identifier.from(PokeSync.PLUGIN_ID, "quest"), PixelmonSerializer.Quest::new, PixelmonData.Quest::new),
     CURRY(Identifier.from(PokeSync.PLUGIN_ID, "curry"), PixelmonSerializer.Curry::new, PixelmonData.Curry::new);
-
     private final Identifier identifier;
 
     private final Function<HuskSync, ? extends Serializer> serializerFunction;
 
-    private final Function<UUID, ? extends BukkitData> constructor;
+    private final Function<PokemonStorage, ? extends BukkitData> constructor;
 
-    PixelmonDataType(Identifier identifier, Function<HuskSync, ? extends Serializer> serializer, Function<UUID, ? extends BukkitData> constructor) {
+    PixelmonDataType(Identifier identifier, Function<HuskSync, ? extends Serializer> serializer, Function<PokemonStorage, ? extends BukkitData> constructor) {
         this.identifier = identifier;
         this.serializerFunction = serializer;
         this.constructor = constructor;
@@ -46,7 +46,7 @@ public enum PixelmonDataType {
         return serializerFunction.apply(api);
     }
 
-    public BukkitData createData(UUID uuid) {
-        return constructor.apply(uuid);
+    public BukkitData createData(PokemonStorage storage) {
+        return constructor.apply(storage);
     }
 }
