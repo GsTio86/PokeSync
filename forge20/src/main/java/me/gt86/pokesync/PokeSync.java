@@ -3,6 +3,7 @@ package me.gt86.pokesync;
 import me.gt86.pokesync.command.ReloadCommand;
 import me.gt86.pokesync.data.Config;
 import me.gt86.pokesync.hook.HuskSyncAPIHook;
+import me.gt86.pokesync.hook.PokeSyncMixinsHook;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -10,11 +11,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PokeSync extends JavaPlugin {
 
     public static final String PLUGIN_ID = "pokesync";
-
     private FileConfiguration config = getConfig();
-
+    private PokeSyncMixinsHook pokeSyncMixinsHook;
     private HuskSyncAPIHook huskSyncAPIHook;
-
     private static PokeSync instance;
 
     @Override
@@ -39,6 +38,11 @@ public class PokeSync extends JavaPlugin {
     }
 
     private void initHooks() {
+        try {
+            Class.forName("me.gt86.pokesyncmixins.PokeSyncMixins");
+            pokeSyncMixinsHook = new PokeSyncMixinsHook();
+        } catch (ClassNotFoundException e) {
+        }
         if (Bukkit.getPluginManager().getPlugin("HuskSync") != null) {
             this.huskSyncAPIHook = new HuskSyncAPIHook();
             getLogger().info("PokeSync has been enabled!");
@@ -55,4 +59,7 @@ public class PokeSync extends JavaPlugin {
         return instance;
     }
 
+    public PokeSyncMixinsHook getPokeSyncMixinsHook() {
+        return pokeSyncMixinsHook;
+    }
 }

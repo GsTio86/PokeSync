@@ -10,6 +10,7 @@ import me.gt86.pokesync.utils.LogUtils;
 import net.william278.husksync.HuskSync;
 import net.william278.husksync.api.HuskSyncAPI;
 import net.william278.husksync.event.BukkitDataSaveEvent;
+import net.william278.husksync.event.BukkitPreSyncEvent;
 import net.william278.husksync.event.BukkitSyncCompleteEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -22,9 +23,11 @@ import java.util.UUID;
 public class HuskSyncAPIHook implements Listener {
 
     private final HuskSyncAPI huskSyncAPI;
+    private final boolean usePokeSyncMixins;
 
     public HuskSyncAPIHook() {
         this.huskSyncAPI = HuskSyncAPI.getInstance();
+        this.usePokeSyncMixins = PokeSync.getInstance().getPokeSyncMixinsHook() != null;
         register();
     }
 
@@ -39,7 +42,7 @@ public class HuskSyncAPIHook implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBukkitDataSave(BukkitDataSaveEvent event) {
-        event.editData((unpacked -> {
+        event.editData(unpacked -> {
             UUID uuid = event.getUser().getUuid();
             PCStorage pc = StorageProxy.getPCForPlayerNow(uuid);
             PlayerPartyStorage party = StorageProxy.getPartyNow(uuid);
@@ -54,11 +57,18 @@ public class HuskSyncAPIHook implements Listener {
                 }
             }
             LogUtils.debug(String.format("PokeSync saved for data [%s]", unpacked.getId()));
-        }));
+        });
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBukkitDataComplete(BukkitSyncCompleteEvent event) {
+    public void onBukkitPreSync(BukkitPreSyncEvent event) {
+        if (usePokeSyncMixins) {
+            PokeSync.getInstance().getPokeSyncMixinsHook().lock(event.getUser().getUuid());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBukkitSyncComplete(BukkitSyncCompleteEvent event) {
         UUID uuid = event.getUser().getUuid();
         PlayerPartyStorage party = StorageProxy.getPartyNow(uuid);
         PCStorage pc = StorageProxy.getPCForPlayerNow(uuid);
@@ -69,6 +79,9 @@ public class HuskSyncAPIHook implements Listener {
         if (pc != null) {
             StorageProxy.getSaveScheduler().save(pc);
             LogUtils.debug(String.format("Load PC saved for %s | %d pokemon", event.getUser().getUsername(), pc.countAll()));;
+        }
+        if (usePokeSyncMixins) {
+            PokeSync.getInstance().getPokeSyncMixinsHook().unlock(uuid);
         }
     }
 
