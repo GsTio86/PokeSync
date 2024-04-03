@@ -1,5 +1,5 @@
 name: PokeSync
-version: '2.4.1'
+version: '2.4.2'
 author: GT86
 main: me.gt86.pokesync.PokeSync
 api-version: 1.20
