@@ -12,7 +12,8 @@ public class PokeSync extends JavaPlugin {
 
     public static final String PLUGIN_ID = "pokesync";
     private FileConfiguration config = getConfig();
-    private PokeSyncMixinsHook pokeSyncMixinsHook;
+
+    private boolean usePokeSyncMixins = false;
     private HuskSyncAPIHook huskSyncAPIHook;
     private static PokeSync instance;
 
@@ -40,7 +41,7 @@ public class PokeSync extends JavaPlugin {
     private void initHooks() {
         try {
             Class.forName("me.gt86.pokesyncmixins.PokeSyncMixins");
-            pokeSyncMixinsHook = new PokeSyncMixinsHook();
+            usePokeSyncMixins = true;
         } catch (ClassNotFoundException e) {
         }
         if (Bukkit.getPluginManager().getPlugin("HuskSync") != null) {
@@ -59,7 +60,8 @@ public class PokeSync extends JavaPlugin {
         return instance;
     }
 
-    public PokeSyncMixinsHook getPokeSyncMixinsHook() {
-        return pokeSyncMixinsHook;
+    public boolean isUsePokeSyncMixins() {
+        return usePokeSyncMixins;
     }
+
 }

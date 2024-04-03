@@ -1,25 +1,19 @@
 package me.gt86.pokesync.hook;
 
-import me.gt86.pokesyncmixins.api.SyncLock;
+
+import me.gt86.pokesyncmixins.api.event.PokeSyncEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.UUID;
 
 public class PokeSyncMixinsHook {
 
-    public boolean isSyncLocked(UUID player) {
-        return SyncLock.isSyncLocked(player);
+    public static void callPreEvent(UUID player) {
+        MinecraftForge.EVENT_BUS.post(new PokeSyncEvent.Pre(player));
     }
 
-    public void setSyncLock(UUID player, boolean lock) {
-        SyncLock.setSyncLock(player, lock);
-    }
-
-    public void lock(UUID player) {
-        SyncLock.lock(player);
-    }
-
-    public void unlock(UUID player) {
-        SyncLock.unlock(player);
+    public static void callCompleteEvent(UUID player) {
+        MinecraftForge.EVENT_BUS.post(new PokeSyncEvent.Complete(player));
     }
 
 }

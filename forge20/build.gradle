@@ -45,7 +45,7 @@ dependencies {
 
     compileOnly 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
     compileOnly "pixelmon:Pixelmon-1.20.2-9.2.6-server:9.2.6"
-    compileOnly fileTree(dir: 'C:/Libraries/Forge', include: 'PokeSyncMixins-1.0.0-1.20.2.jar')  //PokeSyncMixins Jar https://github.com/GsTio86/PokeSyncMixins
+    compileOnly fileTree(dir: 'C:/Libraries/Forge', include: 'PokeSyncMixins-1.1.0-1.20.2.jar')  //PokeSyncMixins Jar https://github.com/GsTio86/PokeSyncMixins
     implementation "net.william278.husksync:husksync-bukkit:3.4"
 }
 

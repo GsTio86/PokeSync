@@ -27,7 +27,7 @@ public class HuskSyncAPIHook implements Listener {
 
     public HuskSyncAPIHook() {
         this.huskSyncAPI = HuskSyncAPI.getInstance();
-        this.usePokeSyncMixins = PokeSync.getInstance().getPokeSyncMixinsHook() != null;
+        this.usePokeSyncMixins = PokeSync.getInstance().isUsePokeSyncMixins();
         register();
     }
 
@@ -63,7 +63,7 @@ public class HuskSyncAPIHook implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBukkitPreSync(BukkitPreSyncEvent event) {
         if (usePokeSyncMixins) {
-            PokeSync.getInstance().getPokeSyncMixinsHook().lock(event.getUser().getUuid());
+            PokeSyncMixinsHook.callPreEvent(event.getUser().getUuid());
         }
     }
 
@@ -81,7 +81,7 @@ public class HuskSyncAPIHook implements Listener {
             LogUtils.debug(String.format("Load PC saved for %s | %d pokemon", event.getUser().getUsername(), pc.countAll()));;
         }
         if (usePokeSyncMixins) {
-            PokeSync.getInstance().getPokeSyncMixinsHook().unlock(uuid);
+            PokeSyncMixinsHook.callCompleteEvent(event.getUser().getUuid());
         }
     }
 
