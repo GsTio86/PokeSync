@@ -81,7 +81,7 @@ public class HuskSyncAPIHook implements Listener {
             LogUtils.debug(String.format("Load PC saved for %s | %d pokemon", event.getUser().getUsername(), pc.countAll()));;
         }
         if (usePokeSyncMixins) {
-            PokeSyncMixinsHook.callCompleteEvent(event.getUser().getUuid());
+            PokeSyncMixinsHook.callCompleteEvent(uuid);
         }
     }
 

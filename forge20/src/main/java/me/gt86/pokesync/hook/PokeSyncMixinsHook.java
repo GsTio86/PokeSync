@@ -1,6 +1,5 @@
 package me.gt86.pokesync.hook;
 
-
 import me.gt86.pokesyncmixins.api.event.PokeSyncEvent;
 import net.minecraftforge.common.MinecraftForge;
 

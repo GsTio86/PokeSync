@@ -3,7 +3,6 @@ package me.gt86.pokesync;
 import me.gt86.pokesync.command.ReloadCommand;
 import me.gt86.pokesync.data.Config;
 import me.gt86.pokesync.hook.HuskSyncAPIHook;
-import me.gt86.pokesync.hook.PokeSyncMixinsHook;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
